@@ -109,6 +109,7 @@ namespace CodeTogetherNG_WebAPI_Tests
             }
         }
 
+        [Test]
         public async Task showTechnologyList()
         {
             HttpClient client = new HttpClient();
@@ -117,16 +118,13 @@ namespace CodeTogetherNG_WebAPI_Tests
             var response = await client.GetAsync("https://localhost:44332/API/TechList");
             if (response.IsSuccessStatusCode)
             {
-                var r = await response.Content.ReadAsAsync<Profile>();
+                var r = await response.Content.ReadAsAsync<List<Technology>>();
 
-                Assert.True(r.UserSkills.Count() == 3);
-                Assert.True(r.UserSkills[0].TechName == "Java");
-                Assert.True(r.UserSkills[0].TechLevel == 1);
-                Assert.True(r.UserOwner.Count() == 5);
-                Assert.True(r.UserOwner[0].Id == 1);
-                Assert.True(r.UserOwner[0].Title == "FirstProject");
-
-
+                Assert.True(r.Count() == 18);
+                Assert.True(r[0].Id == 1);
+                Assert.True(r[0].techName == "Angular");
+                Assert.True(r[17].Id == 18);
+                Assert.True(r[17].techName == "Visual Basic");
             }
             else
             {
