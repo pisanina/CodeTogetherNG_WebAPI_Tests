@@ -69,7 +69,7 @@ namespace CodeTogetherNG_WebAPI_Tests
             HttpClient client = new HttpClient();
            
 
-            var response = await client.GetAsync("https://localhost:44332/API/User?userId="+userId);
+            var response = await client.GetAsync("https://localhost:44332/API/User/"+userId);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<Profile>();
@@ -154,6 +154,34 @@ namespace CodeTogetherNG_WebAPI_Tests
                 Assert.True(r.Technologies[2] == "Java");
                 Assert.True(r.Technologies[3] == "JavaScript");
                 Assert.True(r.State == " Preparing");
+            }
+            else
+            {
+                Assert.True(false, "Non success Conection");
+            }
+        }
+
+        [Test]
+        public async Task UsersList()
+        {
+            HttpClient client = new HttpClient();
+
+
+            var response = await client.GetAsync("https://localhost:44332/API/User");
+            if (response.IsSuccessStatusCode)
+            {
+                var r = await response.Content.ReadAsAsync<List<User>>();
+
+                Assert.True(r.Count() == 3);
+
+                Assert.True(r[0].Id == "26AEDED9-3796-450B-B891-03272C849854");
+                Assert.True(r[0].UserName == "TestUser@a.com");
+                Assert.True(r[0].Owner == 5);
+                Assert.True(r[0].Member == 0);
+                Assert.True(r[0].Beginner == 1);
+                Assert.True(r[0].Advanced == 1);
+                Assert.True(r[0].Expert == 1);
+               
             }
             else
             {
