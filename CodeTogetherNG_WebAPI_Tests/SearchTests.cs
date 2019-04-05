@@ -110,7 +110,7 @@ namespace CodeTogetherNG_WebAPI_Tests
         }
 
         [Test]
-        public async Task showTechnologyList()
+        public async Task TechnologyList()
         {
             HttpClient client = new HttpClient();
            
@@ -125,6 +125,35 @@ namespace CodeTogetherNG_WebAPI_Tests
                 Assert.True(r[0].techName == "Angular");
                 Assert.True(r[17].Id == 18);
                 Assert.True(r[17].techName == "Visual Basic");
+            }
+            else
+            {
+                Assert.True(false, "Non success Conection");
+            }
+        }
+
+        [Test]
+        public async Task ProjectDetails()
+        {
+            HttpClient client = new HttpClient();
+
+
+            var response = await client.GetAsync("https://localhost:44332/API/Projects/Details?id=5");
+            if (response.IsSuccessStatusCode)
+            {
+                var r = await response.Content.ReadAsAsync<ProjectDetails>();
+
+                Assert.True(r.Title == "Test for adding Project with four Tech");
+                Assert.True(r.Description  == "Test for adding Project with four Technologies");
+                Assert.True(r.Owner == "TestUser@a.com");
+                Assert.True(r.Member[0] == "newcoder@a.com");
+                Assert.True(r.NewMembers == false);
+                Assert.True(r.CreationDate == "24/02/2019");
+                Assert.True(r.Technologies[0] == "Assembly");
+                Assert.True(r.Technologies[1] == "C++");
+                Assert.True(r.Technologies[2] == "Java");
+                Assert.True(r.Technologies[3] == "JavaScript");
+                Assert.True(r.State == " Preparing");
             }
             else
             {
