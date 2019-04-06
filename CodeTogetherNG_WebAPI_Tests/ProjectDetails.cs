@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CodeTogetherNG_WebAPI_Tests
 {
-    class ProjectDetails
+    internal class ProjectDetails
     {
         public string Title { get; set; }
         public string Description { get; set; }

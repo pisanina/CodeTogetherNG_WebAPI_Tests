@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CodeTogetherNG_WebAPI_Tests
 {
-    class Profile
+    internal class Profile
     {
         public List<Skill> UserSkills;
         public List<UsersProjects> UserOwner;
