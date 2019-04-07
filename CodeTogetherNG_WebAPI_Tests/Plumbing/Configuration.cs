@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace CodeTogetherNG_WebAPI_Tests
+namespace CodeTogetherNG_WebAPI_Tests.Plumbing
 {
     internal static class Configuration
     {

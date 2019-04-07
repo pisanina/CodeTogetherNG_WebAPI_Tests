@@ -4,25 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using CodeTogetherNG_WebAPI_Tests.DTOs;
+using CodeTogetherNG_WebAPI_Tests.Models;
 
-namespace CodeTogetherNG_WebAPI_Tests
+namespace CodeTogetherNG_WebAPI_Tests.Tests
 {
     public class SearchTests : TestSetup
     {
-        [SetUp]
-        public void PrepareData()
-        {
-            PrepareDbBeforeTest();
-        }
-
         [Test]
         public async Task Search()
         {
-            HttpClient client = new HttpClient();
-
-            var response = await client.GetAsync("https://localhost:44332/API/Projects/");
+            var response = await httpClient.GetAsync("https://localhost:44332/API/Projects/");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<IEnumerable<Projects>>();
@@ -46,10 +41,7 @@ namespace CodeTogetherNG_WebAPI_Tests
         [TestCase("',''); <script>alert('BUM!');</script>'", 0)]
         public async Task SearchByTitleOrDescription(string toSearch, int resultsCount)
         {
-            HttpClient client = new HttpClient();
-            // string toSearch = "pamięć";
-
-            var response = await client.GetAsync("https://localhost:44332/API/Projects/?toSearch="+toSearch);
+            var response = await httpClient.GetAsync("https://localhost:44332/API/Projects/?toSearch="+toSearch);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<IEnumerable<Projects>>();
@@ -70,9 +62,7 @@ namespace CodeTogetherNG_WebAPI_Tests
         [TestCase("26AEDED9-3796-450B-B891-03272C849854", 3, 5, 0)]
         public async Task ShowUserProfile(string userId, int skillsCount, int ownerCount, int memberCount)
         {
-            HttpClient client = new HttpClient();
-
-            var response = await client.GetAsync("https://localhost:44332/API/User/"+userId);
+            var response = await httpClient.GetAsync("https://localhost:44332/API/User/"+userId);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<Profile>();
@@ -89,10 +79,9 @@ namespace CodeTogetherNG_WebAPI_Tests
 
         public async Task CheckDataInProfil()
         {
-            HttpClient client = new HttpClient();
             string userId= "26AEDED9-3796-450B-B891-03272C849854";
 
-            var response = await client.GetAsync("https://localhost:44332/API/User?userId="+userId);
+            var response = await httpClient.GetAsync("https://localhost:44332/API/User?userId="+userId);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<Profile>();
@@ -113,9 +102,7 @@ namespace CodeTogetherNG_WebAPI_Tests
         [Test]
         public async Task TechnologyList()
         {
-            HttpClient client = new HttpClient();
-
-            var response = await client.GetAsync("https://localhost:44332/API/TechList");
+            var response = await httpClient.GetAsync("https://localhost:44332/API/TechList");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<List<Technology>>();
@@ -135,9 +122,7 @@ namespace CodeTogetherNG_WebAPI_Tests
         [Test]
         public async Task ProjectDetails()
         {
-            HttpClient client = new HttpClient();
-
-            var response = await client.GetAsync("https://localhost:44332/API/Projects/Details?id=5");
+            var response = await httpClient.GetAsync("https://localhost:44332/API/Projects/Details?id=5");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<ProjectDetails>();
@@ -163,9 +148,7 @@ namespace CodeTogetherNG_WebAPI_Tests
         [Test]
         public async Task UsersList()
         {
-            HttpClient client = new HttpClient();
-
-            var response = await client.GetAsync("https://localhost:44332/API/User");
+            var response = await httpClient.GetAsync("https://localhost:44332/API/User");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<List<User>>();
@@ -189,9 +172,8 @@ namespace CodeTogetherNG_WebAPI_Tests
         [Test]
         public async Task AddProject()
         {
-            HttpClient client = new HttpClient();
+            await Login();
 
-            ////
             var project= new AddProject
             {
                 Title= "NewProject from API",
@@ -201,7 +183,7 @@ namespace CodeTogetherNG_WebAPI_Tests
             };
 
             var json = JsonConvert.SerializeObject(project);
-            var response=await client.PostAsync("https://localhost:44332/API/Projects",
+            var response=await httpClient.PostAsync("https://localhost:44332/API/Projects",
                 new StringContent(json, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CodeTogetherNG_WebAPI_Tests
+namespace CodeTogetherNG_WebAPI_Tests.Models
 {
     internal class ProjectDetails
     {

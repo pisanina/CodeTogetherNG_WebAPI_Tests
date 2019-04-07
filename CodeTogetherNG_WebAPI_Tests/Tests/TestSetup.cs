@@ -1,10 +1,52 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using CodeTogetherNG_WebAPI_Tests.DTOs;
+using CodeTogetherNG_WebAPI_Tests.Plumbing;
+using Newtonsoft.Json;
+using NUnit.Framework;
 
-namespace CodeTogetherNG_WebAPI_Tests
+namespace CodeTogetherNG_WebAPI_Tests.Tests
 {
     public class TestSetup
     {
+        protected HttpClient httpClient;
+
+        [SetUp]
+        public void PrepareData()
+        {
+            httpClient = new HttpClient();
+            PrepareDbBeforeTest();
+        }
+
+        protected async Task<HttpResponseMessage> Login()
+        {
+            HttpClient client = new HttpClient();
+
+            var user = new UserDto()
+            {
+                Username = "TestUser@a.com",
+                Password = "Qwedsa11!"
+            };
+
+            var userJson = JsonConvert.SerializeObject(user);
+            var loginResponse= await client.PostAsync("https://localhost:44332/API/User/Login",
+                new StringContent(userJson, Encoding.UTF8, "application/json"));
+
+            if (loginResponse.IsSuccessStatusCode)
+            {
+                var token = JsonConvert.DeserializeObject<SuccessLoginResponse>(loginResponse.Content.ReadAsStringAsync().Result).Token;
+
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            }
+
+            return loginResponse;
+        }
+
         public void PrepareDbBeforeTest()
         {
             PurgeDB();
