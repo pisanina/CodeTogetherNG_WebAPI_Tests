@@ -33,7 +33,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             };
 
             var userJson = JsonConvert.SerializeObject(user);
-            var loginResponse= await client.PostAsync("https://localhost:44332/API/User/Login",
+            var loginResponse= await client.PostAsync(Configuration.WebApiUrl+"User /Login",
                 new StringContent(userJson, Encoding.UTF8, "application/json"));
 
             if (loginResponse.IsSuccessStatusCode)
