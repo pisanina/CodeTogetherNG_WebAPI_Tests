@@ -53,7 +53,7 @@
   <!-- Parameters used by tests at runtime -->
   <TestRunParameters>
     <Parameter name="webAppUrl" value="https://codetogetherng-webapi-test.azurewebsites.net/API/"/>
-    <Parameter name="connectionString" value="Server=codetogetherng.database.windows.net;Database=CodetogetherNG_Test;User Id=DanielZegadloSA; Password=imp!QAZ2wsx;" />
+    <Parameter name="connectionString" value="Server=codetogetherng.database.windows.net;Database=CodetogetherNG_Test;User Id=; Password=" />
   </TestRunParameters>
 
 </RunSettings>
