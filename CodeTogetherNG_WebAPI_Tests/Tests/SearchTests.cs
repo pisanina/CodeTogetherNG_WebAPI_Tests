@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeTogetherNG_WebAPI_Tests.DTOs;
 using CodeTogetherNG_WebAPI_Tests.Models;
+using CodeTogetherNG_WebAPI_Tests.Plumbing;
 
 namespace CodeTogetherNG_WebAPI_Tests.Tests
 {
@@ -17,7 +18,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task Search()
         {
-            var response = await httpClient.GetAsync("https://localhost:44332/API/Projects/");
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<IEnumerable<Projects>>();
@@ -41,7 +42,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [TestCase("',''); <script>alert('BUM!');</script>'", 0)]
         public async Task SearchByTitleOrDescription(string toSearch, int resultsCount)
         {
-            var response = await httpClient.GetAsync("https://localhost:44332/API/Projects/?toSearch="+toSearch);
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/?toSearch="+toSearch);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<IEnumerable<Projects>>();
@@ -62,7 +63,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [TestCase("26AEDED9-3796-450B-B891-03272C849854", 3, 5, 0)]
         public async Task ShowUserProfile(string userId, int skillsCount, int ownerCount, int memberCount)
         {
-            var response = await httpClient.GetAsync("https://localhost:44332/API/User/"+userId);
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"User/"+userId);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<Profile>();
@@ -81,7 +82,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         {
             string userId= "26AEDED9-3796-450B-B891-03272C849854";
 
-            var response = await httpClient.GetAsync("https://localhost:44332/API/User?userId="+userId);
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"User?userId="+userId);
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<Profile>();
@@ -102,7 +103,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task TechnologyList()
         {
-            var response = await httpClient.GetAsync("https://localhost:44332/API/TechList");
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"TechList");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<List<Technology>>();
@@ -122,7 +123,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task ProjectDetails()
         {
-            var response = await httpClient.GetAsync("https://localhost:44332/API/Projects/Details?id=5");
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Details?id=5");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<ProjectDetails>();
@@ -148,7 +149,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task UsersList()
         {
-            var response = await httpClient.GetAsync("https://localhost:44332/API/User");
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"User");
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<List<User>>();
@@ -183,7 +184,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             };
 
             var json = JsonConvert.SerializeObject(project);
-            var response=await httpClient.PostAsync("https://localhost:44332/API/Projects",
+            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"Projects",
                 new StringContent(json, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)

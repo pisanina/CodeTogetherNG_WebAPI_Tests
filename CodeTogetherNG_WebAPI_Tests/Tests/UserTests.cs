@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using CodeTogetherNG_WebAPI_Tests.DTOs;
+using CodeTogetherNG_WebAPI_Tests.Plumbing;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -21,7 +22,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             };
 
             var userJson = JsonConvert.SerializeObject(user);
-            var response = await httpClient.PostAsync("https://localhost:44332/API/User/Register",
+            var response = await httpClient.PostAsync(Configuration.WebApiUrl+"User/Register",
                 new StringContent(userJson, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
@@ -59,11 +60,11 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             };
 
             var userJson = JsonConvert.SerializeObject(user);
-            var registerResponse = await httpClient.PostAsync("https://localhost:44332/API/User/Register",
+            var registerResponse = await httpClient.PostAsync(Configuration.WebApiUrl+"User/Register",
                 new StringContent(userJson, Encoding.UTF8, "application/json"));
 
 
-            var loginResponse = await httpClient.PostAsync("https://localhost:44332/API/User/Login",
+            var loginResponse = await httpClient.PostAsync(Configuration.WebApiUrl+"User/Login",
                 new StringContent(userJson, Encoding.UTF8, "application/json"));
 
             if (loginResponse.IsSuccessStatusCode)

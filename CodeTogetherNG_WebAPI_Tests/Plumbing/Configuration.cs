@@ -10,7 +10,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Plumbing
             {
                 var url= TestContext.Parameters["webAppUrl"];
                 if (string.IsNullOrWhiteSpace(url))
-                    return "https://localhost:44362/";
+                    return "https://localhost:44332/API/";
                 return url;
             }
         }
