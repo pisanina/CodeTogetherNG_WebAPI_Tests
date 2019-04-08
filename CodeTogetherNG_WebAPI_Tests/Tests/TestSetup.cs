@@ -120,6 +120,8 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             AddSkill("26AEDED9-3796-450B-B891-03272C849854", 1, 1);
             AddSkill("26AEDED9-3796-450B-B891-03272C849854", 5, 2);
             AddSkill("26AEDED9-3796-450B-B891-03272C849854", 7, 3);
+
+            AddItRoleToUser("26AEDED9-3796-450B-B891-03272C849854", 1);
         }
 
 
@@ -133,6 +135,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
 
                 SqlCommand ClearDB = new SqlCommand(
                     "Delete from ProjectMember " +
+                    "Delete from UserITRole " +
                     "Delete from UserTechnologyLevel " +
                     "Delete From ProjectTechnology " +
                     "Delete From Project " +
@@ -237,6 +240,23 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 addtechToProjectCommand.Parameters.AddWithValue("@userId", userId);
                 addtechToProjectCommand.Parameters.AddWithValue("@techId", techId);
                 addtechToProjectCommand.Parameters.AddWithValue("@techLevel", techLevel);
+
+                addtechToProjectCommand.ExecuteNonQuery();
+            }
+        }
+
+        private void AddItRoleToUser(string userId, int roleId)
+        {
+            using (SqlConnection SQLConnect =
+                new SqlConnection(Configuration.ConnectionString))
+            {
+                SQLConnect.Open();
+
+                SqlCommand addtechToProjectCommand = new SqlCommand(
+                    "Insert Into UserItRole Values(@userId, @roleId)", SQLConnect);
+
+                addtechToProjectCommand.Parameters.AddWithValue("@userId", userId);
+                addtechToProjectCommand.Parameters.AddWithValue("@roleId", roleId);
 
                 addtechToProjectCommand.ExecuteNonQuery();
             }

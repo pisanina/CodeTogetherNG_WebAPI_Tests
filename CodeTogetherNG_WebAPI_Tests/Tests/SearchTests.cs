@@ -196,5 +196,43 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 Assert.True(false, "Non success Conection");
             }
         }
+
+        [Test]
+        public async Task DeleteProject()
+        {
+            await Login();
+            var projectId = 6;
+
+            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"Projects/Delete/"+projectId );
+
+            if (response.IsSuccessStatusCode)
+            {
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.OK);
+            }
+            else
+            {
+                Assert.True(false, "Non success Conection");
+            }
+        }
+
+
+
+        [Test]
+        public async Task DeleteUserItRole()
+        {
+            await Login();
+            var roleId = 1;
+
+            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/Delete/ITRole/"+roleId );
+
+            if (response.IsSuccessStatusCode)
+            {
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.OK);
+            }
+            else
+            {
+                Assert.True(false, "Non success Conection");
+            }
+        }
     }
 }
