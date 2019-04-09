@@ -117,9 +117,9 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             AddMemberToProject(funnyBunnyProjectId, newcoderId
             , new DateTime(2019, 2, 3), "Message", null);
 
-            AddSkill("26AEDED9-3796-450B-B891-03272C849854", 1, 1);
-            AddSkill("26AEDED9-3796-450B-B891-03272C849854", 5, 2);
-            AddSkill("26AEDED9-3796-450B-B891-03272C849854", 7, 3);
+            AddSkill("26AEDED9-3796-450B-B891-03272C849854", Technology.Angular, 1);
+            AddSkill("26AEDED9-3796-450B-B891-03272C849854", Technology.Csharp, 2);
+            AddSkill("26AEDED9-3796-450B-B891-03272C849854", Technology.JavaScript, 3);
 
             AddItRoleToUser("26AEDED9-3796-450B-B891-03272C849854", 1);
         }
@@ -227,7 +227,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         }
 
 
-        private void AddSkill(string userId, int techId, int techLevel)
+        private void AddSkill(string userId, Technology techId, int techLevel)
         {
             using (SqlConnection SQLConnect =
                 new SqlConnection(Configuration.ConnectionString))
@@ -238,7 +238,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                     "Insert Into UserTechnologyLevel Values(@userId, @techId, @techLevel)", SQLConnect);
 
                 addtechToProjectCommand.Parameters.AddWithValue("@userId", userId);
-                addtechToProjectCommand.Parameters.AddWithValue("@techId", techId);
+                addtechToProjectCommand.Parameters.AddWithValue("@techId", (int)techId);
                 addtechToProjectCommand.Parameters.AddWithValue("@techLevel", techLevel);
 
                 addtechToProjectCommand.ExecuteNonQuery();
@@ -264,8 +264,10 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
 
         private enum Technology
         {
+            Angular = 1,
             Assembly = 2,
             Cpp = 4,
+            Csharp = 5,
             Java = 6,
             JavaScript = 7
         }

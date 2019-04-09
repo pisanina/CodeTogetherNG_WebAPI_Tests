@@ -13,7 +13,7 @@ using CodeTogetherNG_WebAPI_Tests.Plumbing;
 
 namespace CodeTogetherNG_WebAPI_Tests.Tests
 {
-    public class SearchTests : TestSetup
+    public class ProjectTests : TestSetup
     {
         [Test]
         public async Task Search()
@@ -78,27 +78,6 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             }
         }
 
-        public async Task CheckDataInProfil()
-        {
-            string userId= "26AEDED9-3796-450B-B891-03272C849854";
-
-            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"User?userId="+userId);
-            if (response.IsSuccessStatusCode)
-            {
-                var r = await response.Content.ReadAsAsync<Profile>();
-
-                Assert.True(r.UserSkills.Count() == 3);
-                Assert.True(r.UserSkills[0].TechName == "Java");
-                Assert.True(r.UserSkills[0].TechLevel == 1);
-                Assert.True(r.UserOwner.Count() == 5);
-                Assert.True(r.UserOwner[0].Id == 1);
-                Assert.True(r.UserOwner[0].Title == "FirstProject");
-            }
-            else
-            {
-                Assert.True(false, "Non success Conection");
-            }
-        }
 
         [Test]
         public async Task TechnologyList()
@@ -146,29 +125,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             }
         }
 
-        [Test]
-        public async Task UsersList()
-        {
-            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"User");
-            if (response.IsSuccessStatusCode)
-            {
-                var r = await response.Content.ReadAsAsync<List<User>>();
-
-                Assert.True(r.Count() == 3);
-
-                Assert.True(r[0].Id == "26AEDED9-3796-450B-B891-03272C849854");
-                Assert.True(r[0].UserName == "TestUser@a.com");
-                Assert.True(r[0].Owner == 5);
-                Assert.True(r[0].Member == 0);
-                Assert.True(r[0].Beginner == 1);
-                Assert.True(r[0].Advanced == 1);
-                Assert.True(r[0].Expert == 1);
-            }
-            else
-            {
-                Assert.True(false, "Non success Conection");
-            }
-        }
+        
 
         [Test]
         public async Task AddProject()
@@ -208,80 +165,6 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             if (response.IsSuccessStatusCode)
             {
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.OK);
-            }
-            else
-            {
-                Assert.True(false, "Non success Conection");
-            }
-        }
-
-
-
-        [Test]
-        public async Task DeleteUserItRole()
-        {
-            await Login();
-            var roleId = 1;
-
-            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/Delete/ITRole/"+roleId );
-
-            if (response.IsSuccessStatusCode)
-            {
-                Assert.True(response.StatusCode == System.Net.HttpStatusCode.OK);
-            }
-            else
-            {
-                Assert.True(false, "Non success Conection");
-            }
-        }
-
-
-
-        [Test]
-        public async Task AddUserItRole()
-        {
-            await Login();
-
-            var role = new UserITRole
-            {
-                UserId= "26AEDED9-3796-450B-B891-03272C849854",
-                RoleId = 3
-            };
-
-            var json = JsonConvert.SerializeObject(role);
-            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/Add/ITRole/",
-                            new StringContent(json, Encoding.UTF8, "application/json"));
-
-            if (response.IsSuccessStatusCode)
-            {
-                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Created);
-            }
-            else
-            {
-                Assert.True(false, "Non success Conection");
-            }
-        }
-
-        [Test]
-        public async Task AddUserTech()
-        {
-            await Login();
-
-            var tech= new UsersTechnology
-            {
-                UserId = "26AEDED9-3796-450B-B891-03272C849854",
-                TechnologyId = 3,
-                TechLevel = 1
-            };
-
-            var json = JsonConvert.SerializeObject(tech);
-
-            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/Add/Tech/",
-                                         new StringContent(json, Encoding.UTF8, "application/json"));
-
-            if (response.IsSuccessStatusCode)
-            {
-                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Created);
             }
             else
             {
