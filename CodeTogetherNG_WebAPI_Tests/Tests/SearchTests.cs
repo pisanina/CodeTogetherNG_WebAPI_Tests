@@ -234,5 +234,25 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 Assert.True(false, "Non success Conection");
             }
         }
+
+
+
+        [Test]
+        public async Task AddUserItRole()
+        {
+            await Login();
+            var roleId = 3;
+
+            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/Add/ITRole/"+roleId );
+
+            if (response.IsSuccessStatusCode)
+            {
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Created);
+            }
+            else
+            {
+                Assert.True(false, "Non success Conection");
+            }
+        }
     }
 }
