@@ -241,9 +241,43 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         public async Task AddUserItRole()
         {
             await Login();
-            var roleId = 3;
 
-            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/Add/ITRole/"+roleId );
+            var role = new UserITRole
+            {
+                UserId= "26AEDED9-3796-450B-B891-03272C849854",
+                RoleId = 3
+            };
+
+            var json = JsonConvert.SerializeObject(role);
+            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/Add/ITRole/",
+                            new StringContent(json, Encoding.UTF8, "application/json"));
+
+            if (response.IsSuccessStatusCode)
+            {
+                Assert.True(response.StatusCode == System.Net.HttpStatusCode.Created);
+            }
+            else
+            {
+                Assert.True(false, "Non success Conection");
+            }
+        }
+
+        [Test]
+        public async Task AddUserTech()
+        {
+            await Login();
+
+            var tech= new UsersTechnology
+            {
+                UserId = "26AEDED9-3796-450B-B891-03272C849854",
+                TechnologyId = 3,
+                TechLevel = 1
+            };
+
+            var json = JsonConvert.SerializeObject(tech);
+
+            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/Add/Tech/",
+                                         new StringContent(json, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
