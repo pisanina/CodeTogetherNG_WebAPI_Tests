@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace CodeTogetherNG_WebAPI_Tests.Tests
 {
-    public class TestSetup
+    public abstract class TestSetup
     {
         protected HttpClient httpClient;
 
@@ -22,15 +22,26 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             PrepareDbBeforeTest();
         }
 
-        protected async Task<HttpResponseMessage> Login()
+        protected async Task<HttpResponseMessage> Login(TestUsers userEnum = TestUsers.TestUser)
         {
             HttpClient client = new HttpClient();
 
-            var user = new UserDto()
+            var user = new UserDto();
+            switch (userEnum)
             {
-                Username = "TestUser@a.com",
-                Password = "Qwedsa11!"
-            };
+                case TestUsers.TestUser:
+                    user.Username = "TestUser@a.com";
+                    user.Password = "Qwedsa11!";
+                    break;
+                case TestUsers.Coder:
+                    user.Username = "coder@a.com";
+                    user.Password = "Qwedsa11!1";
+                    break;
+                case TestUsers.NewCoder:
+                    user.Username = "newcoder@a.com";
+                    user.Password = "Qwedsa11!1";
+                    break;
+            }
 
             var userJson = JsonConvert.SerializeObject(user);
             var loginResponse= await client.PostAsync(Configuration.WebApiUrl+"User/Login",
@@ -72,12 +83,12 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 , ProjectState.Preparing,new DateTime(2019,2,27));
 
             var funnyBunnyProjectId= AddProject("Funny bunny"
-                , "We want to create web aplication with many funny bunes"
+                , "We want to create web aplication with many funny bunes <script>alert('BUM!');</script>"
                 ,testUserId, true, ProjectState.Preparing
                 ,new DateTime(2019,2,26));
 
             var polishCharactersProjectId= AddProject("Polish title like pamięć"
-                , "Test for polish worlds like pamięć"
+                , "Test for polish worlds like pamięć ',''); CREATE LOGIN Admin WITH PASSWORD = 'ABCD'--"
                 ,testUserId, false, ProjectState.Preparing
                 ,new DateTime(2019,2,25));
 

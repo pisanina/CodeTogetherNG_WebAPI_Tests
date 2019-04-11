@@ -1,4 +1,6 @@
-﻿namespace CodeTogetherNG_WebAPI_Tests.Models
+﻿using System.Collections.Generic;
+
+namespace CodeTogetherNG_WebAPI_Tests.Models
 {
     internal class User
     {
@@ -9,5 +11,6 @@
         public int Beginner { get; set; }
         public int Advanced { get; set; }
         public int Expert { get; set; }
+        public int ITRole { get; set; }
     }
 }

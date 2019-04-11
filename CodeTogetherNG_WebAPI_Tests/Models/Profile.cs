@@ -7,5 +7,6 @@ namespace CodeTogetherNG_WebAPI_Tests.Models
         public List<Skill> UserSkills;
         public List<UsersProjects> UserOwner;
         public List<UsersProjects> UserMember;
+        public List<UserITRole> UserITRole;
     }
 }

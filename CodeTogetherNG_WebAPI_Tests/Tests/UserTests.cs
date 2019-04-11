@@ -81,23 +81,22 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         }
 
         [Test]
-        public async Task AddUserItRole()
+        public async Task AddUserItRole() 
         {
             await Login();
-
-            var role = new UserITRole
-            {
-                UserId= "26AEDED9-3796-450B-B891-03272C849854",
-                RoleId = 3
-            };
-
-            var json = JsonConvert.SerializeObject(role);
-            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/Add/ITRole/",
-                            new StringContent(json, Encoding.UTF8, "application/json"));
+            
+            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/ITRole", 
+                            new StringContent("3", Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Created);
+                var check = await httpClient.GetAsync(Configuration.WebApiUrl+"User/26AEDED9-3796-450B-B891-03272C849854");
+                if (check.IsSuccessStatusCode)
+                {
+                    var r = await check.Content.ReadAsAsync<Profile>();
+                    Assert.True(r.UserITRole.Count() == 2);
+                }
             }
             else
             {
@@ -111,11 +110,18 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             await Login();
             var roleId = 1;
 
-            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/Delete/ITRole/"+roleId );
+            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/ITRole/"+roleId );
 
             if (response.IsSuccessStatusCode)
             {
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.OK);
+
+                var check = await httpClient.GetAsync(Configuration.WebApiUrl+"User/26AEDED9-3796-450B-B891-03272C849854");
+                if (check.IsSuccessStatusCode)
+                {
+                    var r = await check.Content.ReadAsAsync<Profile>();
+                    Assert.True(r.UserITRole.Count() == 0);
+                }
             }
             else
             {
@@ -131,19 +137,26 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
 
             var tech= new UsersTechnology
             {
-                UserId = "26AEDED9-3796-450B-B891-03272C849854",
                 TechnologyId = 3,
                 TechLevel = 1
             };
 
             var json = JsonConvert.SerializeObject(tech);
 
-            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/Add/Tech/",
+            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"User/Tech/", 
                                          new StringContent(json, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Created);
+
+                var check = await httpClient.GetAsync(Configuration.WebApiUrl+"User/26AEDED9-3796-450B-B891-03272C849854");
+                if (check.IsSuccessStatusCode)
+                {
+                    var r = await check.Content.ReadAsAsync<Profile>();
+                    Assert.True(r.UserSkills.Count() == 4);
+                    Assert.True(r.UserSkills[3].TechLevel == 1);
+                }
             }
             else
             {
@@ -156,15 +169,14 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         {
             await Login();
             var techId = 1;
-            string userId = "26AEDED9-3796-450B-B891-03272C849854";
 
-            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/Delete/Tech/"+techId );
+            var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"User/Tech/"+techId );
 
             if (response.IsSuccessStatusCode)
             {
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.OK);
 
-                var check = await httpClient.GetAsync(Configuration.WebApiUrl+"User/"+userId);
+                var check = await httpClient.GetAsync(Configuration.WebApiUrl+"User/26AEDED9-3796-450B-B891-03272C849854");
                 if (check.IsSuccessStatusCode)
                 {
                     var r = await check.Content.ReadAsAsync<Profile>();
