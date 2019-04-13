@@ -251,7 +251,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             };
 
             var json = JsonConvert.SerializeObject(project);
-            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"Projects/Change/",
+            var response=await httpClient.PutAsync(Configuration.WebApiUrl+"Projects/Change/",
                 new StringContent(json, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
@@ -290,7 +290,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             };
 
             var json = JsonConvert.SerializeObject(project);
-            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"Projects/Change/",
+            var response=await httpClient.PutAsync(Configuration.WebApiUrl+"Projects/Change/",
                 new StringContent(json, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
@@ -320,7 +320,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             };
 
             var json = JsonConvert.SerializeObject(project);
-            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"Projects/Change/",
+            var response=await httpClient.PutAsync(Configuration.WebApiUrl+"Projects/Change/",
                 new StringContent(json, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
