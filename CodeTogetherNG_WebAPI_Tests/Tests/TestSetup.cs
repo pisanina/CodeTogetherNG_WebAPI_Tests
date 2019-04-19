@@ -93,7 +93,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 ,new DateTime(2019,2,25));
 
             var fourTechsProjectId= AddProject("Test for adding Project with four Tech"
-                , "Test for adding Project with four Technologies"
+                , "Test for adding Project with four Technologies <h1>html injection</h1>"
                 ,testUserId, false, ProjectState.Preparing
                 ,new DateTime(2019,2,24));
 

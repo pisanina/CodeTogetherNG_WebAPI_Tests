@@ -235,5 +235,26 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 Assert.True(false, "Non success Conection");
             }
         }
+
+
+
+        [Test]
+        public async Task TestJWTTokenLogged()
+        {
+            await Login();
+
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/UserName");
+            Assert.True(response.StatusCode == System.Net.HttpStatusCode.OK);
+          
+            var r = await response.Content.ReadAsAsync<string>();
+            Assert.True(r =="TestUser@a.com");
+        }
+
+        [Test]
+        public async Task TestJWTTokenNotLogged()
+        {
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/UserName");
+            Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+        }
     }
 }

@@ -48,6 +48,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [TestCase("Our first project will be SUPRISE Hello World", 1)]
         [TestCase("<script>alert('BUM!');</script>", 1)]
         [TestCase("',''); CREATE LOGIN Admin WITH PASSWORD = 'ABCD'--", 1)]
+        [TestCase("<h1>html injection</h1>", 1)]
         public async Task SearchByTitleOrDescription(string toSearch, int resultsCount)
         {
             var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/?toSearch="+toSearch);
@@ -159,7 +160,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 var r = await response.Content.ReadAsAsync<ProjectDetails>();
 
                 Assert.True(r.Title == "Test for adding Project with four Tech");
-                Assert.True(r.Description == "Test for adding Project with four Technologies");
+                Assert.True(r.Description == "Test for adding Project with four Technologies <h1>html injection</h1>");
                 Assert.True(r.Owner == "TestUser@a.com");
                 Assert.True(r.Member[0] == "newcoder@a.com");
                 Assert.True(r.NewMembers == false);
