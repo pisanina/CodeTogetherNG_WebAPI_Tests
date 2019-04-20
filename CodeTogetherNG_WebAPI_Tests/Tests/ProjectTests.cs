@@ -162,7 +162,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 Assert.True(r.Title == "Test for adding Project with four Tech");
                 Assert.True(r.Description == "Test for adding Project with four Technologies <h1>html injection</h1>");
                 Assert.True(r.Owner.UserName == "TestUser@a.com");
-                Assert.True(r.Member[0].UserName == "newcoder@a.com");
+                Assert.True(r.Member.Count == 0);
                 Assert.True(r.NewMembers == false);
                 Assert.True(r.CreationDate == "24/02/2019");
                 Assert.True(r.Technologies[0] == "Assembly");
@@ -424,6 +424,36 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             Assert.AreEqual(1, r.Count());
             Assert.AreEqual("Message", r.First().Message);
             Assert.AreEqual("newcoder@a.com", r.First().MemberName);
+        }
+
+        [Test]
+        public async Task TestRequestOnProjectDetails()
+        {
+            await LoginAsync(TestUsers.NewCoder);
+
+            var pending = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/3");
+            var p = await pending.Content.ReadAsAsync<IsAbleToSendNewRequest>();
+
+            Assert.AreEqual("Your request is pending", p.Message);
+
+            var rejected = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/4");
+            var r = await rejected.Content.ReadAsAsync<IsAbleToSendNewRequest>();
+
+            Assert.AreEqual("", r.Message);
+            Assert.AreEqual(false, r.Display);
+
+            var accepted = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/5");
+            var a = await accepted.Content.ReadAsAsync<IsAbleToSendNewRequest>();
+
+            Assert.AreEqual("", a.Message);
+            Assert.AreEqual(true, a.Display);
+
+            var freshRejected = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/1");
+            var f = await freshRejected.Content.ReadAsAsync<IsAbleToSendNewRequest>();
+
+            Assert.AreEqual("Your unable to send a join request until " +
+                    DateTime.Now.AddMonths(1).ToString("dd/MM/yyyy"), f.Message);
+            Assert.AreEqual(false, f.Display);
         }
     }
 }

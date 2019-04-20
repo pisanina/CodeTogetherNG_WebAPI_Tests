@@ -257,34 +257,58 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
         }
 
-        [Test]
-        public async Task TestRequestHandling()
+        
+
+
+        [TestCase(true, 1)]
+        [TestCase(false, 0)]
+        public async Task HandleRequest(bool accept, int membersCount)
         {
-            await LoginAsync(TestUsers.NewCoder);
+            await Login();
 
-            var pending = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/3");
-            var p = await pending.Content.ReadAsAsync<RequestHandlingDto>();
+            var checkMembers = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/3");
+            var r = await checkMembers.Content.ReadAsAsync<ProjectDetails>();
+            Assert.AreEqual(0, r.Member.Count());
 
-            Assert.AreEqual("Your request is pending", p.Message);
+            var user = new HandleRequestDto()
+            {
+                ProjectId = 3,
+                UserId = "E4DC8E37-CA29-46E9-8B3E-6FDCB18545F6",
+                Accept = accept
+            };
 
-            var rejected = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/4");
-            var r = await rejected.Content.ReadAsAsync<RequestHandlingDto>();
+            var requestJson = JsonConvert.SerializeObject(user);
+            
+            var handleRequest = await httpClient.PutAsync(Configuration.WebApiUrl+"Projects/Request",
+                new StringContent(requestJson, Encoding.UTF8, "application/json"));
 
-            Assert.AreEqual("", r.Message);
-            Assert.AreEqual(false, r.Display);
+            Assert.True(handleRequest.StatusCode == System.Net.HttpStatusCode.OK);
 
-            var accepted = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/5");
-            var a = await accepted.Content.ReadAsAsync<RequestHandlingDto>();
+           
 
-            Assert.AreEqual("", a.Message);
-            Assert.AreEqual(true, a.Display);
+            checkMembers = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/3");
+            r = await checkMembers.Content.ReadAsAsync<ProjectDetails>();
+            Assert.AreEqual(membersCount, r.Member.Count());
+        }
 
-            var freshRejected = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/1");
-            var f = await freshRejected.Content.ReadAsAsync<RequestHandlingDto>();
+        [Test]
+        public async Task HandleRequestNotOwner()
+        {
+            await LoginAsync(TestUsers.Coder);
 
-            Assert.AreEqual("Your unable to send a join request until " +
-                    DateTime.Now.AddMonths(1).ToString("dd/MM/yyyy"), f.Message);
-            Assert.AreEqual(false, f.Display);
+            var user = new HandleRequestDto()
+            {
+                ProjectId = 3,
+                UserId = "E4DC8E37-CA29-46E9-8B3E-6FDCB18545F6",
+                Accept = true
+            };
+
+            var requestJson = JsonConvert.SerializeObject(user);
+
+            var handleRequest = await httpClient.PutAsync(Configuration.WebApiUrl+"Projects/Request",
+                new StringContent(requestJson, Encoding.UTF8, "application/json"));
+
+            Assert.True(handleRequest.StatusCode == System.Net.HttpStatusCode.Unauthorized);
         }
     }
 }
