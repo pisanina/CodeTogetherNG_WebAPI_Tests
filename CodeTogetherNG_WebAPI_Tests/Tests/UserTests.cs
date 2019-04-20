@@ -41,7 +41,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task Login()
         {
-            var response = await base.Login();
+            var response = await base.LoginAsync();
 
             if (response.IsSuccessStatusCode)
             {
@@ -255,6 +255,36 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         {
             var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/UserName");
             Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+        }
+
+        [Test]
+        public async Task TestRequestHandling()
+        {
+            await LoginAsync(TestUsers.NewCoder);
+
+            var pending = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/3");
+            var p = await pending.Content.ReadAsAsync<RequestHandlingDto>();
+
+            Assert.AreEqual("Your request is pending", p.Message);
+
+            var rejected = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/4");
+            var r = await rejected.Content.ReadAsAsync<RequestHandlingDto>();
+
+            Assert.AreEqual("", r.Message);
+            Assert.AreEqual(false, r.Display);
+
+            var accepted = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/5");
+            var a = await accepted.Content.ReadAsAsync<RequestHandlingDto>();
+
+            Assert.AreEqual("", a.Message);
+            Assert.AreEqual(true, a.Display);
+
+            var freshRejected = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Request/1");
+            var f = await freshRejected.Content.ReadAsAsync<RequestHandlingDto>();
+
+            Assert.AreEqual("Your unable to send a join request until " +
+                    DateTime.Now.AddMonths(1).ToString("dd/MM/yyyy"), f.Message);
+            Assert.AreEqual(false, f.Display);
         }
     }
 }

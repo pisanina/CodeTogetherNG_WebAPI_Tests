@@ -154,15 +154,15 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task ProjectDetails()
         {
-            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/Details?id=5");//1. zrobmy to bardziej rest: Projects/5
+            var response = await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/5");//1. zrobmy to bardziej rest: Projects/5
             if (response.IsSuccessStatusCode)
             {
                 var r = await response.Content.ReadAsAsync<ProjectDetails>();
 
                 Assert.True(r.Title == "Test for adding Project with four Tech");
                 Assert.True(r.Description == "Test for adding Project with four Technologies <h1>html injection</h1>");
-                Assert.True(r.Owner == "TestUser@a.com");
-                Assert.True(r.Member[0] == "newcoder@a.com");
+                Assert.True(r.Owner.UserName == "TestUser@a.com");
+                Assert.True(r.Member[0].UserName == "newcoder@a.com");
                 Assert.True(r.NewMembers == false);
                 Assert.True(r.CreationDate == "24/02/2019");
                 Assert.True(r.Technologies[0] == "Assembly");
@@ -180,7 +180,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task AddProject()
         {
-            await Login();
+            await LoginAsync();
 
             var project= new AddProject
             {
@@ -238,7 +238,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task ChangeProject() 
         {
-            await Login();
+            await LoginAsync();
             var projectId = 5;
 
             var project= new ChangeProject
@@ -277,7 +277,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task ChangeProjectNotOwner()
         {
-            await Login(TestUsers.Coder);
+            await LoginAsync(TestUsers.Coder);
             var projectId = 5;
 
             var project= new ChangeProject
@@ -337,7 +337,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task DeleteProject()
         {
-            await Login();
+            await LoginAsync();
             var projectId = 5;
 
             var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"Projects/Delete/"+projectId );
@@ -361,7 +361,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         [Test]
         public async Task DeleteProjectNotOwner()
         {
-            await Login(TestUsers.Coder);
+            await LoginAsync(TestUsers.Coder);
             var projectId = 5;
 
             var response=await httpClient.DeleteAsync(Configuration.WebApiUrl+"Projects/Delete/"+projectId );
@@ -391,6 +391,39 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             {
                 Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
             }
+        }
+
+        [Test]
+        public async Task AddRequest()
+        {
+
+            await LoginAsync(TestUsers.Coder);
+
+            var request= new RequestDto
+            {
+                ProjectId = 1,
+                Message = "Plese let me code"
+            };
+
+            var json = JsonConvert.SerializeObject(request);
+            var response=await httpClient.PostAsync(Configuration.WebApiUrl+"Projects/Request",
+                new StringContent(json, Encoding.UTF8, "application/json"));
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.True(response.StatusCode == System.Net.HttpStatusCode.Created);
+        }
+
+        [Test]
+        public async Task GetRequest()
+        {
+            await LoginAsync();
+
+            var response=await httpClient.GetAsync(Configuration.WebApiUrl+"Projects/RequestList/3");
+            var r = await response.Content.ReadAsAsync<IEnumerable<Request>>();
+            
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.AreEqual(1, r.Count());
+            Assert.AreEqual("Message", r.First().Message);
+            Assert.AreEqual("newcoder@a.com", r.First().MemberName);
         }
     }
 }

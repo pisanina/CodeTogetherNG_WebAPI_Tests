@@ -22,7 +22,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
             PrepareDbBeforeTest();
         }
 
-        protected async Task<HttpResponseMessage> Login(TestUsers userEnum = TestUsers.TestUser)
+        protected async Task<HttpResponseMessage> LoginAsync(TestUsers userEnum = TestUsers.TestUser)
         {
             HttpClient client = new HttpClient();
 
@@ -39,7 +39,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                     break;
                 case TestUsers.NewCoder:
                     user.Username = "newcoder@a.com";
-                    user.Password = "Qwedsa11!1";
+                    user.Password = "Qwedsa11!";
                     break;
             }
 
@@ -127,6 +127,9 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
 
             AddMemberToProject(funnyBunnyProjectId, newcoderId
             , new DateTime(2019, 2, 3), "Message", null);
+
+            AddMemberToProject(firstProjectId, newcoderId
+            , DateTime.Now, "Message", false);
 
             AddSkill("26AEDED9-3796-450B-B891-03272C849854", Technology.Angular, 1);
             AddSkill("26AEDED9-3796-450B-B891-03272C849854", Technology.Csharp, 2);
