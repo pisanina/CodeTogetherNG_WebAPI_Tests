@@ -165,11 +165,11 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
                 Assert.True(r.Member.Count == 0);
                 Assert.True(r.NewMembers == false);
                 Assert.True(r.CreationDate == "24/02/2019");
-                Assert.True(r.Technologies[0] == "Assembly");
-                Assert.True(r.Technologies[1] == "C++");
-                Assert.True(r.Technologies[2] == "Java");
-                Assert.True(r.Technologies[3] == "JavaScript");
-                Assert.True(r.State == " Preparing");
+                Assert.True(r.Technologies[0] == 2);
+                Assert.True(r.Technologies[1] == 4);
+                Assert.True(r.Technologies[2] == 6);
+                Assert.True(r.Technologies[3] == 7);
+                Assert.True(r.State == 1);
             }
             else
             {

@@ -11,7 +11,7 @@ namespace CodeTogetherNG_WebAPI_Tests.Models
         public List<MemberDto> Member { get; set; }
         public string CreationDate { get; set; }
         public bool NewMembers { get; set; }
-        public List<string> Technologies { get; set; }
-        public string State { get; set; }
+        public List<int> Technologies { get; set; }
+        public int State { get; set; }
     }
 }
