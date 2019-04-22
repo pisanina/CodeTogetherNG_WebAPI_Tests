@@ -310,5 +310,23 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
 
             Assert.True(handleRequest.StatusCode == System.Net.HttpStatusCode.Unauthorized);
         }
+
+        [Test]
+        public async Task CheckGetUser()
+        {
+           await  LoginAsync();
+           var userName = await httpClient.GetAsync(Configuration.WebApiUrl + "User/Logged");
+            var r = await userName.Content.ReadAsAsync<string>();
+
+            Assert.AreEqual("testuser@a.com", r.ToLower());
+        }
+
+        [Test]
+        public async Task CheckGetUserNotLogged()
+        {
+            var userName = await httpClient.GetAsync(Configuration.WebApiUrl + "User/Logged");
+
+            Assert.True(userName.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+        }
     }
 }
