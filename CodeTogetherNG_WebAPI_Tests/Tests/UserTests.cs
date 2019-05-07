@@ -316,9 +316,9 @@ namespace CodeTogetherNG_WebAPI_Tests.Tests
         {
            await  LoginAsync();
            var userName = await httpClient.GetAsync(Configuration.WebApiUrl + "User/Logged");
-            var r = await userName.Content.ReadAsAsync<string>();
+            var r = await userName.Content.ReadAsAsync<LoggedUserDto>();
 
-            Assert.AreEqual("testuser@a.com", r.ToLower());
+            Assert.AreEqual("testuser@a.com", r.Name.ToLower());
         }
 
         [Test]
